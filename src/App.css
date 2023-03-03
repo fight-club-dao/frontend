@@ -1,0 +1,31 @@
+html, body {
+  height:100%;
+  min-height:100%;
+}
+/* / Styling */
+.FightClubMain {
+  background: #FF416C;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #FF4B2B, #FF416C);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #FF4B2B, #FF416C); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+  color: white;
+}
+
+.MainButton {
+  width: 15vw;
+  background: rgba( 255, 255, 255, 0.25 ) !important;
+  box-shadow: 0 8px 32px 0 rgba(195, 70, 28, 0.37);
+  backdrop-filter: blur( 12.5px );
+  -webkit-backdrop-filter: blur( 12.5px );
+  border-radius: 10px;
+  border: 1px solid rgba( 255, 255, 255, 0.18 );
+}
+
+.MainButton:hover {
+  background: rgba( 255, 255, 255, 0.5 ) !important;
+  box-shadow: 0 8px 32px 0 rgba(195, 70, 28, 0.37);
+  backdrop-filter: blur( 12.5px );
+  -webkit-backdrop-filter: blur( 12.5px );
+  border-radius: 5px;
+  border: 1px solid rgba( 255, 255, 255, 0.18 );
+}
