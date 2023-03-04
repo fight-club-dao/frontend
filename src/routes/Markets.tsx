@@ -29,8 +29,8 @@ const displayTableElements = (): React.ReactElement[] => {
             <Td>Vitalik vs Amitay</Td> 
             <Td>RPS</Td> 
             <Td>2:1</Td>
-            <Td>$500</Td>
-            <Td>$1000</Td>
+            <Td className="BrowseMarketsTableElementToken">$500</Td>
+            <Td className="BrowseMarketsTableElementToken">$1000</Td>
         </Tr>
         );
     }
