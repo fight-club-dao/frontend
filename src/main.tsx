@@ -11,6 +11,8 @@ import {
 
 import Root from "./routes/Root"
 import Markets from "./routes/Markets"
+import CreateMarket from "./routes/CreateMarket"
+import Lend from "./routes/Lend"
 
 const router = createBrowserRouter([
   {
@@ -20,6 +22,14 @@ const router = createBrowserRouter([
   {
     path: "/markets",
     element: <Markets />
+  },
+  {
+    path: "/create",
+    element: <CreateMarket />
+  },
+  {
+    path: "/lend",
+    element: <Lend />
   }
 ]);
 
