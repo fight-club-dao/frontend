@@ -29,7 +29,7 @@ import Lend from "./routes/Lend"
 const { chains, provider } = configureChains(
   [mainnet, polygon, optimism, arbitrum, goerli],
   [
-    alchemyProvider({ apiKey: import.meta.env.ALCHEMY_ID ?? "" }),
+    alchemyProvider({ apiKey: import.meta.env.VITE_ALCHEMY_ID ?? "" }),
     publicProvider()
   ]
 );

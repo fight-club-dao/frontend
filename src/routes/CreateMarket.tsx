@@ -47,7 +47,7 @@ function CreateMarket() {
                 </AccordionButton> 
               </h2> 
               <AccordionPanel pb={4}> 
-                Once your proposal is approved you'll be able to bet <Link href="/markets">here</Link>.
+                Once your proposal is approved you'll be able to bet <Link fontWeight={800} href="/markets">here</Link>.
               </AccordionPanel> 
               </AccordionItem> 
           </Accordion>
