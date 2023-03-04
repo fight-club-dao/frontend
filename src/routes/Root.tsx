@@ -17,6 +17,9 @@ function Root() {
   return (
     <Box className="MainPageContainer">
       <Box className='FightClubMain'>
+        <Box className="ConnectButtonContainer">
+            <ConnectButton />
+        </Box>
         <Center h="100vh">
             <VStack spacing="8">
                 <Heading size="3xl">Fight Club</Heading>
@@ -30,7 +33,6 @@ function Root() {
             </VStack>
         </Center>
       </Box>
-      <ConnectButton />
     </Box>
   )
 }

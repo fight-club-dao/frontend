@@ -45,7 +45,7 @@ function Markets() {
     <Box className="MainPageContainer">
       <Box className='FightClubMain'>
         <Center h="100vh">
-            <TableContainer maxHeight="100vh" maxWidth="100vw" overflowY="scroll" minW="100vw"> 
+            <TableContainer maxHeight="100vh" maxWidth="100vw" overflowY="scroll" minW="100vw" className="BrowseMarketsTableContainer"> 
                 <Table variant='simple' size="lg"> 
                     {/*<TableCaption>Imperial to metric conversion factors</TableCaption>*/} 
                     <Thead> 

@@ -17,7 +17,7 @@ import {
   RainbowKitProvider,
 } from '@rainbow-me/rainbowkit';
 import { configureChains, createClient, WagmiConfig } from 'wagmi';
-import { mainnet, polygon, optimism, arbitrum } from 'wagmi/chains';
+import { mainnet, polygon, optimism, arbitrum, goerli } from 'wagmi/chains';
 import { alchemyProvider } from 'wagmi/providers/alchemy';
 import { publicProvider } from 'wagmi/providers/public';
 
@@ -27,7 +27,7 @@ import CreateMarket from "./routes/CreateMarket"
 import Lend from "./routes/Lend"
 
 const { chains, provider } = configureChains(
-  [mainnet, polygon, optimism, arbitrum],
+  [mainnet, polygon, optimism, arbitrum, goerli],
   [
     alchemyProvider({ apiKey: import.meta.env.ALCHEMY_ID ?? "" }),
     publicProvider()
