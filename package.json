@@ -12,15 +12,18 @@
     "@chakra-ui/react": "^2.5.1",
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
+    "@rainbow-me/rainbowkit": "^0.11.1",
     "@snapshot-labs/snapshot.js": "^0.4.65",
-    "ethers": "^6.0.8",
+    "buffer": "^6.0.3",
+    "ethers": "^5.0.0",
     "framer-motion": "^10.0.1",
     "localforage": "^1.10.0",
     "match-sorter": "^6.3.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.8.2",
-    "sort-by": "^1.2.0"
+    "sort-by": "^1.2.0",
+    "wagmi": "^0.11.7"
   },
   "devDependencies": {
     "@types/react": "^18.0.27",

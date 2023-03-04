@@ -9,6 +9,8 @@ import { Button } from "@chakra-ui/react";
 
 import { Outlet, Link } from "react-router-dom";
 
+import { ConnectButton } from '@rainbow-me/rainbowkit';
+
 function Root() {
   const [count, setCount] = useState(0)
 
@@ -28,6 +30,7 @@ function Root() {
             </VStack>
         </Center>
       </Box>
+      <ConnectButton />
     </Box>
   )
 }
