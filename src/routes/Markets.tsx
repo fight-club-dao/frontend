@@ -58,8 +58,10 @@ const displayTableElements = (signer: ethers.Signer, stats: any[], prizes: any, 
         return ratio;
     }
 
-    const claim = async () => {
-        
+    const claim = async (id: number) => {
+        let contract = new ethers.Contract("0xB5478784f4f59F6EA54B046D0780859F994fbEfE", PredictionMarketABI, signer);
+
+        await contract.claim(id);
     }
 
     for (let stat of stats) {
@@ -74,7 +76,7 @@ const displayTableElements = (signer: ethers.Signer, stats: any[], prizes: any, 
             <Td className="BrowseMarketsTableElementToken"><Link href={`https://app.uniswap.org/#/swap?theme=dark&outputCurrency=${stat[0][0]}&network=goerli`} isExternal>{`$${prizes[indexOfStat]?.[0] / 100000}`}</Link></Td>
             <Td className="BrowseMarketsTableElementToken"><Link href={`https://app.uniswap.org/#/swap?theme=dark&outputCurrency=${stat[1][0]}&network=goerli`} isExternal>{`$${prizes[indexOfStat]?.[1] / 100000}`}</Link></Td>
             <Td>{getStatus(stat[3])}</Td>
-            <Td><Button w="10vw" isDisabled={!eligible[indexOfStat]} onClick={claim} className="MainButton">Claim</Button></Td>
+            <Td><Button w="10vw" isDisabled={!eligible[indexOfStat]} onClick={() => claim(indexOfStat)} className="MainButton">Claim</Button></Td>
         </Tr>
         );
     }
@@ -91,7 +93,7 @@ function Markets() {
   const { data: signer, isError, isLoading } = useSigner();
 
   useEffect(() => {
-    const getStats = async (provider: ethers.providers.BaseProvider): any[] => {
+    const getStats = async (provider: ethers.providers.BaseProvider) => {
         let statsInfo: any[] = [];
         let stats = 0;
     
@@ -114,7 +116,7 @@ function Markets() {
   }, [0]);
 
   useEffect(() => {
-    const getPrize = async (provider: ethers.providers.BaseProvider): any[] => {
+    const getPrize = async (provider: ethers.providers.BaseProvider) => {
         let prizeInfo: any[] = [];
         let prize = 0;
     
