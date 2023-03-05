@@ -73,7 +73,7 @@ const displayTableElements = (signer: ethers.Signer | undefined, stats: any[], p
     }
 
     const claim = async (id: number) => {
-        let contract = new ethers.Contract("0xB5478784f4f59F6EA54B046D0780859F994fbEfE", PredictionMarketABI, signer);
+        let contract = new ethers.Contract("0xDF11378E7f5708Bab56c8925E086096Fa54E378C", PredictionMarketABI, signer);
         
         try {
             await contract.claim(id);
@@ -93,7 +93,7 @@ const displayTableElements = (signer: ethers.Signer | undefined, stats: any[], p
 
         TRArray.push(
         <Tr className="BrowseMarketsTableElement"> 
-            <Td>{stat[2]?.toNumber()}</Td> 
+            <Td>{stat[2]?.toNumber() + 1}</Td> 
             <Td>{`${stat[0][2]} vs ${stat[1][2]}`}</Td> 
             <Td>🪨📜✂️</Td> 
             <Td>{`${calculateRatio(Math.floor(prizes[indexOfStat]?.[0] / 100000), Math.floor(prizes[indexOfStat]?.[1] / 100000))}`}</Td>
@@ -150,7 +150,38 @@ const swapETHToUSDC = async (signer: ethers.Signer | undefined) => {
     // Perform the swap.
     let quote = await response.json();
 
-    console.log(quote)
+    await executeSwap(quote);
+}
+
+const swapUSDCToPoolToken = async (signer: ethers.Signer | undefined, tokenAddress: string) => {
+    const ZERO_EX_ADDRESS = '0xf91bb752490473b8342a3e964e855b9f9a2a668e';
+    const USDC_ADDRESS = '0x07865c6E87B9F70255377e024ace6630C1Eaa37F';
+
+    // Selling 0.001 ETH for USDC.
+    const params = {
+        sellToken: USDC_ADDRESS,
+        buyToken: tokenAddress,
+        // Note that the USDC token uses 6 decimal places, so `sellAmount` is `10 * 10^6`.    
+        sellAmount: '10000000',
+        chainId: 5,
+        takerAddress: await signer?.getAddress(),
+    }
+
+    const usdc = new ethers.Contract(USDC_ADDRESS, ERC20ABI, signer);
+    const currentAllowance = await usdc.allowance(params.takerAddress, ZERO_EX_ADDRESS);
+    if (currentAllowance.lt(params.sellAmount)) {
+        await usdc.approve(ZERO_EX_ADDRESS, params.sellAmount)
+    }
+
+    // Fetch the swap quote.
+    const response = await fetch(
+        `https://goerli.api.0x.org/swap/v1/quote?${qs.stringify(params)}`
+    );
+
+    // Perform the swap.
+    let quote = await response.json();
+
+    console.log(quote);
 
     await executeSwap(quote);
 }
@@ -171,9 +202,9 @@ function Markets() {
   useEffect(() => {
     const getStats = async (provider: ethers.providers.BaseProvider) => {
         let statsInfo: any[] = [];
-        let stats = 0;
+        let stats = 1;
     
-        let contract = new ethers.Contract("0x249024660B3bB5D24e65aaeA66edea6A81a1E2CB", PMHelperABI, provider);
+        let contract = new ethers.Contract("0x538d01D671293eC4173031bF8DCCf2cf10C778a2", PMHelperABI, provider);
     
         try {
             while(stats < Infinity) {
@@ -194,9 +225,9 @@ function Markets() {
   useEffect(() => {
     const getPrize = async (provider: ethers.providers.BaseProvider) => {
         let prizeInfo: any[] = [];
-        let prize = 0;
+        let prize = 1;
     
-        let contract = new ethers.Contract("0x249024660B3bB5D24e65aaeA66edea6A81a1E2CB", PMHelperABI, provider);
+        let contract = new ethers.Contract("0x538d01D671293eC4173031bF8DCCf2cf10C778a2", PMHelperABI, provider);
     
         try {
             while(prize < Infinity) {
@@ -298,7 +329,8 @@ function Markets() {
             <Center h="100%">
                 <VStack>
                     <Button w="15vw" onClick={() => swapETHToUSDC(signer ?? undefined)} className="MainButton">Swap ETH to USDC</Button>
-                    <Link href={`https://app.uniswap.org/#/swap?theme=dark&outputCurrency=${stats?.[currentStat]?.[currentTokenIndex]?.[0]}&network=goerli`} isExternal><Button w="10vw" className="MainButton">Buy on Uniswap</Button></Link>
+                    <Button w="15vw" onClick={() => swapUSDCToPoolToken(signer ?? undefined, stats?.[currentStat]?.[currentTokenIndex]?.[0])} className="MainButton">Swap USDC to {stats?.[currentStat]?.[currentTokenIndex]?.[2]}</Button>
+                    <Link href={`https://app.uniswap.org/#/swap?theme=dark&outputCurrency=${stats?.[currentStat]?.[currentTokenIndex]?.[0]}&network=goerli`} isExternal><Button w="15vw" className="MainButton">Buy Directly on Uniswap</Button></Link>
                 </VStack>
             </Center>
           </ModalBody>
