@@ -19,6 +19,7 @@ import { Box } from "@chakra-ui/react";
 import { HStack, VStack } from "@chakra-ui/react";
 import { Button } from "@chakra-ui/react";
 import { Link } from "@chakra-ui/react";
+import { useToast } from '@chakra-ui/react'
 
 import { ethers } from 'ethers';
 import { useProvider, useSigner } from 'wagmi'
@@ -29,7 +30,7 @@ import PredictionMarketABI from "../../abi/PredictionMarketManager.json";
 import PMHelperABI from "../../abi/PMHelper.json"
 import ERC20ABI from "../../abi/ERC20.json"
 
-const displayTableElements = (signer: ethers.Signer | undefined, stats: any[], prizes: any, eligible: any): React.ReactElement[] => {
+const displayTableElements = (signer: ethers.Signer | undefined, stats: any[], prizes: any, eligible: any, toast: any): React.ReactElement[] => {
     let TRArray = [];
 
     console.log(stats);
@@ -60,8 +61,18 @@ const displayTableElements = (signer: ethers.Signer | undefined, stats: any[], p
 
     const claim = async (id: number) => {
         let contract = new ethers.Contract("0xB5478784f4f59F6EA54B046D0780859F994fbEfE", PredictionMarketABI, signer);
-
-        await contract.claim(id);
+        
+        try {
+            await contract.claim(id);
+        } catch (e) {
+            toast({
+                title: 'Claim Failed',
+                description: "Transaction Not Permitted/Reverted",
+                status: 'error',
+                duration: 2500,
+                isClosable: true,
+            })
+        }
     }
 
     for (let stat of stats) {
@@ -172,6 +183,8 @@ function Markets() {
 
     updateEligibleInfo()
   }, [0]);
+
+  const toast = useToast();
   
   return (
     <Box className="MainPageContainer">
@@ -196,7 +209,7 @@ function Markets() {
                         </Tr> 
                     </Thead> 
                     <Tbody> 
-                        {displayTableElements(signer ?? undefined, stats, prizes, eligible)}
+                        {displayTableElements(signer ?? undefined, stats, prizes, eligible, toast)}
                     </Tbody> 
                     {/*<Tfoot> 
                         <Tr> 
