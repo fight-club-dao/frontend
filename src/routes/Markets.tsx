@@ -104,7 +104,7 @@ const displayTableElements = (signer: ethers.Signer | undefined, stats: any[], p
             <Td className="BrowseMarketsTableElementToken"><Button w="10vw" className="MainButton" onClick={() => { setCurrentStat(indexOfStat); setTokenIndex(0); onOpen(); }}>Buy {stat[0][2]}</Button></Td>
             <Td className="BrowseMarketsTableElementToken"><Button w="10vw" className="MainButton" onClick={() => { setCurrentStat(indexOfStat); setTokenIndex(1); onOpen(); }}>Buy {stat[1][2]}</Button></Td>
             <Td>{getStatus(stat[3])}</Td>
-            <Td><Button w="10vw" isDisabled={eligible[indexOfStat]} onClick={() => claim(indexOfStat + 1)} className="MainButton">Claim</Button></Td>
+            <Td><Button w="10vw" isDisabled={!eligible[indexOfStat]} onClick={() => claim(indexOfStat + 1)} className="MainButton">Claim</Button></Td>
             <Td>{stat[2] == 0 ? "Undecided" : stat[2] == 1 ? stat[0][2] : stat[1][2]}</Td>
         </Tr>
         );
