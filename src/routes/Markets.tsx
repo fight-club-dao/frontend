@@ -76,7 +76,7 @@ const displayTableElements = (signer: ethers.Signer | undefined, stats: any[], p
         let contract = new ethers.Contract("0xDF11378E7f5708Bab56c8925E086096Fa54E378C", PredictionMarketABI, signer);
         
         try {
-            await contract.claim(id);
+            await contract.claimAndRemoveLiquidity(id, 0);
         } catch (e) {
             toast({
                 title: 'Claim Failed',
