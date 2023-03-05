@@ -128,6 +128,7 @@ const executeSwap = async (quote: any) => {
         method: "eth_sendTransaction",
         params: [txParams]
       });
+
     } catch {
         
     }
@@ -141,8 +142,8 @@ const swapETHToUSDC = async (signer: ethers.Signer | undefined) => {
     const params = {
         sellToken: "ETH",
         buyToken: USDC_ADDRESS,
-        // Note that the DAI token uses 18 decimal places, so `sellAmount` is `0.001 * 10^18`.    
-        sellAmount: '1000000000000000',
+        // Note that the DAI token uses 18 decimal places, so `sellAmount` is `0.01 * 10^18`.    
+        sellAmount: '10000000000000000',
         chainId: 5,
         takerAddress: await signer?.getAddress(),
     }
@@ -166,8 +167,8 @@ const swapUSDCToPoolToken = async (signer: ethers.Signer | undefined, tokenAddre
     const params = {
         sellToken: USDC_ADDRESS,
         buyToken: tokenAddress,
-        // Note that the USDC token uses 6 decimal places, so `sellAmount` is `10 * 10^6`.    
-        sellAmount: '10000000',
+        // Note that the USDC token uses 6 decimal places, so `sellAmount` is `100 * 10^6`.    
+        sellAmount: '100000000',
         chainId: 5,
         takerAddress: await signer?.getAddress(),
     }
@@ -189,6 +190,11 @@ const swapUSDCToPoolToken = async (signer: ethers.Signer | undefined, tokenAddre
     console.log(quote);
 
     await executeSwap(quote);
+}
+
+const swapETHToPoolToken = async (signer: ethers.Signer | undefined, tokenAddress: string) => {
+    await swapETHToUSDC(signer ?? undefined);
+    await swapUSDCToPoolToken(signer ?? undefined, tokenAddress);
 }
 
 function Markets() {
@@ -334,8 +340,9 @@ function Markets() {
           <ModalBody>
             <Center h="100%">
                 <VStack>
-                    <Button w="15vw" onClick={() => swapETHToUSDC(signer ?? undefined)} className="MainButton">Swap ETH to USDC</Button>
-                    <Button w="15vw" onClick={() => swapUSDCToPoolToken(signer ?? undefined, stats?.[currentStat]?.[currentTokenIndex]?.[0])} className="MainButton">Swap USDC to {stats?.[currentStat]?.[currentTokenIndex]?.[2]}</Button>
+                    <Button w="15vw" onClick={() => swapETHToUSDC(signer ?? undefined)} className="MainButton">Swap 0.01 ETH to USDC</Button>
+                    <Button w="15vw" onClick={() => swapUSDCToPoolToken(signer ?? undefined, stats?.[currentStat]?.[currentTokenIndex]?.[0])} className="MainButton">Swap 100 USDC to {stats?.[currentStat]?.[currentTokenIndex]?.[2]}</Button>
+                    {/* {<Button w="15vw" onClick={() => swapETHToPoolToken(signer ?? undefined, stats?.[currentStat]?.[currentTokenIndex]?.[0])} className="MainButton">Swap ETH to {stats?.[currentStat]?.[currentTokenIndex]?.[2]}</Button>} */}
                     <Link href={`https://app.uniswap.org/#/swap?theme=dark&outputCurrency=${stats?.[currentStat]?.[currentTokenIndex]?.[0]}&network=goerli`} isExternal><Button w="15vw" className="MainButton">Buy Directly on Uniswap</Button></Link>
                 </VStack>
             </Center>
