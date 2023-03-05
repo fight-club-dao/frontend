@@ -95,7 +95,7 @@ const displayTableElements = (signer: ethers.Signer | undefined, stats: any[], p
     for (let stat of stats) {
         let indexOfStat = stats.indexOf(stat);
 
-        TRArray.push(
+        TRArray.unshift(
         <Tr className="BrowseMarketsTableElement"> 
             <Td>{indexOfStat + 1}</Td> 
             <Td>{`${stat[0][2]} vs ${stat[1][2]}`}</Td> 
