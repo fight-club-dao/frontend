@@ -93,7 +93,7 @@ const displayTableElements = (signer: ethers.Signer | undefined, stats: any[], p
 
         TRArray.push(
         <Tr className="BrowseMarketsTableElement"> 
-            <Td>{stat[2]?.toNumber() + 1}</Td> 
+            <Td>{indexOfStat + 1}</Td> 
             <Td>{`${stat[0][2]} vs ${stat[1][2]}`}</Td> 
             <Td>🪨📜✂️</Td> 
             <Td>{`${calculateRatio(Math.floor(prizes[indexOfStat]?.[0] / 100000), Math.floor(prizes[indexOfStat]?.[1] / 100000))}`}</Td>
@@ -101,6 +101,7 @@ const displayTableElements = (signer: ethers.Signer | undefined, stats: any[], p
             <Td className="BrowseMarketsTableElementToken"><Button w="10vw" className="MainButton" onClick={() => { setCurrentStat(indexOfStat); setTokenIndex(1); onOpen(); }}>Buy {stat[1][2]}</Button></Td>
             <Td>{getStatus(stat[3])}</Td>
             <Td><Button w="10vw" isDisabled={!eligible[indexOfStat]} onClick={() => claim(indexOfStat)} className="MainButton">Claim</Button></Td>
+            <Td>{stat[2] == 0 ? "Undecided" : stat[2] == 1 ? stat[0][2] : stat[1][2]}</Td>
         </Tr>
         );
     }
@@ -304,6 +305,7 @@ function Markets() {
                             <Th className="BrowseMarketsTableHead">$ Token 2</Th> 
                             <Th className="BrowseMarketsTableHead">Status</Th> 
                             <Th className="BrowseMarketsTableHead">Claim</Th> 
+                            <Th className="BrowseMarketsTableHead">Winner</Th>
                         </Tr> 
                     </Thead> 
                     <Tbody> 
