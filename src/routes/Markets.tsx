@@ -305,8 +305,8 @@ function Markets() {
                             <Th className="BrowseMarketsTableHead">Name</Th> 
                             <Th className="BrowseMarketsTableHead">Type</Th> 
                             <Th className="BrowseMarketsTableHead">Odds</Th> 
-                            <Th className="BrowseMarketsTableHead">$ Token 1</Th> 
-                            <Th className="BrowseMarketsTableHead">$ Token 2</Th> 
+                            <Th className="BrowseMarketsTableHead">Buy Token 1</Th> 
+                            <Th className="BrowseMarketsTableHead">Buy Token 2</Th> 
                             <Th className="BrowseMarketsTableHead">Status</Th> 
                             <Th className="BrowseMarketsTableHead">Claim</Th> 
                             <Th className="BrowseMarketsTableHead">Winner</Th>
