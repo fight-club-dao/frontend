@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react'
 import '../App.css'  
         
+import qs from "qs";
+import BigNumber from "bignumber.js"
+
 import {
     Table,
     Thead,
@@ -12,6 +15,18 @@ import {
     TableCaption,
     TableContainer,
   } from '@chakra-ui/react'
+
+import {
+    Modal,
+    ModalOverlay,
+    ModalContent,
+    ModalHeader,
+    ModalFooter,
+    ModalBody,
+    ModalCloseButton,
+} from '@chakra-ui/react'
+
+import { useDisclosure } from '@chakra-ui/react'
 
 import { Heading } from '@chakra-ui/react'
 import { Center } from "@chakra-ui/react";
@@ -30,7 +45,7 @@ import PredictionMarketABI from "../../abi/PredictionMarketManager.json";
 import PMHelperABI from "../../abi/PMHelper.json"
 import ERC20ABI from "../../abi/ERC20.json"
 
-const displayTableElements = (signer: ethers.Signer | undefined, stats: any[], prizes: any, eligible: any, toast: any): React.ReactElement[] => {
+const displayTableElements = (signer: ethers.Signer | undefined, stats: any[], prizes: any, eligible: any, toast: any, isOpen: boolean, onOpen: () => void, onClose: () => void, setCurrentStat: any, setTokenIndex: any): React.ReactElement[] => {
     let TRArray = [];
 
     const getStatus = (status: string): string => {
@@ -82,8 +97,8 @@ const displayTableElements = (signer: ethers.Signer | undefined, stats: any[], p
             <Td>{`${stat[0][2]} vs ${stat[1][2]}`}</Td> 
             <Td>🪨📜✂️</Td> 
             <Td>{`${calculateRatio(Math.floor(prizes[indexOfStat]?.[0] / 100000), Math.floor(prizes[indexOfStat]?.[1] / 100000))}`}</Td>
-            <Td className="BrowseMarketsTableElementToken"><Link href={`https://app.uniswap.org/#/swap?theme=dark&outputCurrency=${stat[0][0]}&network=goerli`} isExternal><Button w="10vw" className="MainButton">Buy {stat[0][2]}</Button></Link></Td>
-            <Td className="BrowseMarketsTableElementToken"><Link href={`https://app.uniswap.org/#/swap?theme=dark&outputCurrency=${stat[1][0]}&network=goerli`} isExternal><Button w="10vw" className="MainButton">Buy {stat[1][2]}</Button></Link></Td>
+            <Td className="BrowseMarketsTableElementToken"><Button w="10vw" className="MainButton" onClick={() => { setCurrentStat(indexOfStat); setTokenIndex(0); onOpen(); }}>Buy {stat[0][2]}</Button></Td>
+            <Td className="BrowseMarketsTableElementToken"><Button w="10vw" className="MainButton" onClick={() => { setCurrentStat(indexOfStat); setTokenIndex(1); onOpen(); }}>Buy {stat[1][2]}</Button></Td>
             <Td>{getStatus(stat[3])}</Td>
             <Td><Button w="10vw" isDisabled={!eligible[indexOfStat]} onClick={() => claim(indexOfStat)} className="MainButton">Claim</Button></Td>
         </Tr>
@@ -93,11 +108,60 @@ const displayTableElements = (signer: ethers.Signer | undefined, stats: any[], p
     return TRArray;
 }
 
+const executeSwap = async (quote: any) => {
+    const txParams = {
+      ...quote,
+      value: new BigNumber(quote.value).toString(16), // Convert value to hexadecimal
+      gas: new BigNumber(quote.gas).toString(16), // Convert gas to hexadecimal
+      gasPrice: new BigNumber(quote.gasPrice).toString(16) // Convert gasPrice to hexadecimal
+    };
+  
+    // Execute trade directly with Metamask
+    try {
+      const ethereum = (window as any).ethereum;
+      const txHash = await ethereum.request({
+        method: "eth_sendTransaction",
+        params: [txParams]
+      });
+    } catch {
+        
+    }
+};
+
+const swapETHToUSDC = async (signer: ethers.Signer | undefined) => {
+    const ZERO_EX_ADDRESS = '0xf91bb752490473b8342a3e964e855b9f9a2a668e';
+    const USDC_ADDRESS = '0x07865c6E87B9F70255377e024ace6630C1Eaa37F';
+
+    // Selling 0.001 ETH for USDC.
+    const params = {
+        sellToken: "ETH",
+        buyToken: USDC_ADDRESS,
+        // Note that the DAI token uses 18 decimal places, so `sellAmount` is `0.001 * 10^18`.    
+        sellAmount: '1000000000000000',
+        chainId: 5,
+        takerAddress: await signer?.getAddress(),
+    }
+
+    // Fetch the swap quote.
+    const response = await fetch(
+        `https://goerli.api.0x.org/swap/v1/quote?${qs.stringify(params)}`
+    );
+
+    // Perform the swap.
+    let quote = await response.json();
+
+    console.log(quote)
+
+    await executeSwap(quote);
+}
+
 function Markets() {
   const [count, setCount] = useState(0)
   const [stats, setStats] = useState(Array<any>)
   const [prizes, setPrizes] = useState(Array<any>)
   const [eligible, setEligible] = useState(Array<any>)
+  const [currentStat, setCurrentStat] = useState(0)
+  const [currentTokenIndex, setTokenIndex] = useState(0)
 
   const provider = useProvider();
   const { data: signer, isError, isLoading } = useSigner();
@@ -186,6 +250,8 @@ function Markets() {
   }, [count]);
 
   const toast = useToast();
+
+  const { isOpen, onOpen, onClose } = useDisclosure()
   
   return (
     <Box className="MainPageContainer">
@@ -210,7 +276,7 @@ function Markets() {
                         </Tr> 
                     </Thead> 
                     <Tbody> 
-                        {displayTableElements(signer ?? undefined, stats, prizes, eligible, toast)}
+                        {displayTableElements(signer ?? undefined, stats, prizes, eligible, toast, isOpen, onOpen, onClose, setCurrentStat, setTokenIndex)}
                     </Tbody> 
                     {/*<Tfoot> 
                         <Tr> 
@@ -223,6 +289,26 @@ function Markets() {
             </TableContainer>
         </Center>
       </Box>
+      <Modal isOpen={isOpen} onClose={onClose} isCentered>
+        <ModalOverlay />
+        <ModalContent className="MarketsBuyModal">
+          <ModalHeader>Buy {stats?.[currentStat]?.[currentTokenIndex]?.[2]}</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Center h="100%">
+                <VStack>
+                    <Button w="15vw" onClick={() => swapETHToUSDC(signer ?? undefined)} className="MainButton">Swap ETH to USDC</Button>
+                    <Link href={`https://app.uniswap.org/#/swap?theme=dark&outputCurrency=${stats?.[currentStat]?.[currentTokenIndex]?.[0]}&network=goerli`} isExternal><Button w="10vw" className="MainButton">Buy on Uniswap</Button></Link>
+                </VStack>
+            </Center>
+          </ModalBody>
+          <ModalFooter>
+            <Button w="5vw" className="MainButton" mr={3} onClick={onClose}>
+              Cancel
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Box>
   )
 }

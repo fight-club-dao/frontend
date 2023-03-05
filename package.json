@@ -14,11 +14,13 @@
     "@emotion/styled": "^11.10.6",
     "@rainbow-me/rainbowkit": "^0.11.1",
     "@snapshot-labs/snapshot.js": "^0.4.65",
+    "bignumber.js": "^9.1.1",
     "buffer": "^6.0.3",
     "ethers": "^5.0.0",
     "framer-motion": "^10.0.1",
     "localforage": "^1.10.0",
     "match-sorter": "^6.3.1",
+    "qs": "^6.11.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.8.2",
@@ -26,6 +28,7 @@
     "wagmi": "^0.11.7"
   },
   "devDependencies": {
+    "@types/qs": "^6.9.7",
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
     "@vitejs/plugin-react-swc": "^3.0.0",

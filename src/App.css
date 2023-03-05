@@ -80,3 +80,13 @@ html, body {
   border-radius: 10px;
   border: 1px solid rgba( 255, 255, 255, 0.18 );
 }
+
+.MarketsBuyModal {
+  background: rgba( 255, 255, 255, 0.25 ) !important;
+  box-shadow: 0 8px 32px 0 rgba(195, 70, 28, 0.37);
+  backdrop-filter: blur( 12.5px );
+  -webkit-backdrop-filter: blur( 12.5px );
+  border-radius: 10px;
+  border: 1px solid rgba( 255, 255, 255, 0.18 );
+  color: white !important;
+}
