@@ -33,8 +33,6 @@ import ERC20ABI from "../../abi/ERC20.json"
 const displayTableElements = (signer: ethers.Signer | undefined, stats: any[], prizes: any, eligible: any, toast: any): React.ReactElement[] => {
     let TRArray = [];
 
-    console.log(stats);
-
     const getStatus = (status: string): string => {
         switch (status) {
             case "BEFORE_START":
@@ -82,10 +80,10 @@ const displayTableElements = (signer: ethers.Signer | undefined, stats: any[], p
         <Tr className="BrowseMarketsTableElement"> 
             <Td>{stat[2]?.toNumber()}</Td> 
             <Td>{`${stat[0][2]} vs ${stat[1][2]}`}</Td> 
-            <Td>RPS</Td> 
+            <Td>🪨📜✂️</Td> 
             <Td>{`${calculateRatio(Math.floor(prizes[indexOfStat]?.[0] / 100000), Math.floor(prizes[indexOfStat]?.[1] / 100000))}`}</Td>
-            <Td className="BrowseMarketsTableElementToken"><Link href={`https://app.uniswap.org/#/swap?theme=dark&outputCurrency=${stat[0][0]}&network=goerli`} isExternal>{`$${prizes[indexOfStat]?.[0] / 100000}`}</Link></Td>
-            <Td className="BrowseMarketsTableElementToken"><Link href={`https://app.uniswap.org/#/swap?theme=dark&outputCurrency=${stat[1][0]}&network=goerli`} isExternal>{`$${prizes[indexOfStat]?.[1] / 100000}`}</Link></Td>
+            <Td className="BrowseMarketsTableElementToken"><Link href={`https://app.uniswap.org/#/swap?theme=dark&outputCurrency=${stat[0][0]}&network=goerli`} isExternal><Button w="10vw" className="MainButton">Buy {stat[0][2]}</Button></Link></Td>
+            <Td className="BrowseMarketsTableElementToken"><Link href={`https://app.uniswap.org/#/swap?theme=dark&outputCurrency=${stat[1][0]}&network=goerli`} isExternal><Button w="10vw" className="MainButton">Buy {stat[1][2]}</Button></Link></Td>
             <Td>{getStatus(stat[3])}</Td>
             <Td><Button w="10vw" isDisabled={!eligible[indexOfStat]} onClick={() => claim(indexOfStat)} className="MainButton">Claim</Button></Td>
         </Tr>
@@ -96,12 +94,15 @@ const displayTableElements = (signer: ethers.Signer | undefined, stats: any[], p
 }
 
 function Markets() {
+  const [count, setCount] = useState(0)
   const [stats, setStats] = useState(Array<any>)
   const [prizes, setPrizes] = useState(Array<any>)
   const [eligible, setEligible] = useState(Array<any>)
 
   const provider = useProvider();
   const { data: signer, isError, isLoading } = useSigner();
+
+  setTimeout(() => setCount(count + 1), 5000);
 
   useEffect(() => {
     const getStats = async (provider: ethers.providers.BaseProvider) => {
@@ -124,7 +125,7 @@ function Markets() {
     }
 
     getStats(provider);
-  }, [0]);
+  }, [count]);
 
   useEffect(() => {
     const getPrize = async (provider: ethers.providers.BaseProvider) => {
@@ -147,7 +148,7 @@ function Markets() {
     }
 
     getPrize(provider);
-  }, [0]);
+  }, [count]);
 
   useEffect(() => {
     if (stats.length == 0) return;
@@ -182,7 +183,7 @@ function Markets() {
     }
 
     updateEligibleInfo()
-  }, [0]);
+  }, [count]);
 
   const toast = useToast();
   
