@@ -6,6 +6,7 @@ import { Center } from "@chakra-ui/react";
 import { Box } from "@chakra-ui/react";
 import { HStack, VStack } from "@chakra-ui/react";
 import { Button } from "@chakra-ui/react";
+import { Link as L } from "@chakra-ui/react"
 
 import { Outlet, Link } from "react-router-dom";
 
@@ -25,10 +26,10 @@ function Root() {
                 <Heading size="3xl">Fight Club</Heading>
                 <VStack spacing="3">
                 <HStack>
-                    <Button className="MainButton"><Link to="/markets">Browse Markets</Link></Button>
-                    <Button className="MainButton"><Link to="/create">Create Market</Link></Button>
+                    <Link to="/markets"><Button className="MainButton">Browse Markets</Button></Link>
+                    <Link to="/create"><Button className="MainButton">Create Market</Button></Link>
                 </HStack>
-                <Button className="MainButton"><Link to="/lend">Lend</Link></Button>
+                <L href="https://huma-workshop.vercel.app/#/lend" isExternal><Button className="MainButton">Lend</Button></L>
                 </VStack>
             </VStack>
         </Center>
