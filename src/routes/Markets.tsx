@@ -29,7 +29,7 @@ import PredictionMarketABI from "../../abi/PredictionMarketManager.json";
 import PMHelperABI from "../../abi/PMHelper.json"
 import ERC20ABI from "../../abi/ERC20.json"
 
-const displayTableElements = (signer: ethers.Signer, stats: any[], prizes: any, eligible: any): React.ReactElement[] => {
+const displayTableElements = (signer: ethers.Signer | undefined, stats: any[], prizes: any, eligible: any): React.ReactElement[] => {
     let TRArray = [];
 
     console.log(stats);
@@ -144,11 +144,13 @@ function Markets() {
     const updateEligibleInfo = async () => {
         const determineIfEligibleForClaim = async (stat: any[]): Promise<boolean> => {
             let result = stat[2]?.toNumber();
+
+            let contractSigner = signer ?? undefined;
     
             if (result !== 0) {
                 let winningTokenIndex = result == 1 ? 0 : 1;
-                let walletAddress = signer.getAddress();
-                let contract = new ethers.Contract(stat[winningTokenIndex][0], ERC20ABI, signer);
+                let walletAddress = signer?.getAddress();
+                let contract = new ethers.Contract(stat[winningTokenIndex][0], ERC20ABI, contractSigner);
     
                 let tokenBalance = await contract.balanceOf(walletAddress);
     
@@ -194,7 +196,7 @@ function Markets() {
                         </Tr> 
                     </Thead> 
                     <Tbody> 
-                        {displayTableElements(signer, stats, prizes, eligible)}
+                        {displayTableElements(signer ?? undefined, stats, prizes, eligible)}
                     </Tbody> 
                     {/*<Tfoot> 
                         <Tr> 
